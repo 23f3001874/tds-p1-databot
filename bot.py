@@ -15,8 +15,10 @@ from fastapi import FastAPI
 from fastapi.responses import PlainTextResponse
 
 BOT_TOKEN = os.environ["BOT_TOKEN"]
-OPENROUTER_API_KEY = os.environ["OPENROUTER_API_KEY"]
 BASE_URL = os.environ["BASE_URL"].rstrip("/")
+
+LLM_API_KEY = os.environ.get("LLM_API_KEY") or os.environ.get("OPENROUTER_API_KEY") or os.environ.get("AIPIPE_TOKEN")
+LLM_BASE_URL = os.environ.get("LLM_BASE_URL", "https://openrouter.ai/api/v1")
 MODEL = os.environ.get("MODEL", "openai/gpt-4o")
 
 TELEGRAM_API = f"https://api.telegram.org/bot{BOT_TOKEN}"
@@ -102,9 +104,9 @@ def call_llm(messages, allow_tools=True):
     if allow_tools:
         payload["tools"] = TOOLS
     resp = requests.post(
-        "https://openrouter.ai/api/v1/chat/completions",
+        f"{LLM_BASE_URL}/chat/completions",
         headers={
-            "Authorization": f"Bearer {OPENROUTER_API_KEY}",
+            "Authorization": f"Bearer {LLM_API_KEY}",
             "Content-Type": "application/json",
         },
         json=payload,

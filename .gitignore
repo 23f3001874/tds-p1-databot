@@ -2,3 +2,6 @@
 run.jsonl
 __pycache__/
 *.pyc
+run.jsonl
+uvicorn.log
+test_agent_local.py
